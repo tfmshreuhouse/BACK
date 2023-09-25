@@ -1,0 +1,6 @@
+LISTENPORT=3000
+TOKENSECRET=V563*wcdXr157YibVp
+SQLUser=shareuhouse
+SQLPwd=umavGF!dbpB4
+SQLDB=shareuhouse
+SQLHost=bookeat.com.mx
