@@ -27,7 +27,7 @@ app.listen(process.env.LISTENPORT, () => {
     console.log('listening on port ' + process.env.LISTENPORT);
 })
 
-app.get('/', middlewareValidateRequestFields("query", fieldsRequireAuth, "errorAuthRoute0"), requireAuth, (req, res) => {
+app.get('/', (req, res) => {
     db.sequelize.sync();
     res.send('Hello World!');
 });
