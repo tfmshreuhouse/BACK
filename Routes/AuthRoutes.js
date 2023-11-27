@@ -3,8 +3,8 @@ const router = express.Router();
 const authController = require('../Controllers/AuthCtrl')
 const { middlewareValidateRequestFields, middlewareValidateRequestValues } = require('../Middleware/globalMiddleware');
 
-const fieldsPostCreateUser = ['nombres', 'apellidos', 'correo', 'password', 'perfil', 'status'];
-const fieldsPutUpdateUser = ['id', 'nombres', 'apellidos', 'correo', 'perfil', 'status'];
+const fieldsPostCreateUser = ['nombres', 'apellidos', 'correo', 'telefono', 'password', 'perfil', 'status'];
+const fieldsPutUpdateUser = ['id', 'nombres', 'apellidos', 'correo', 'telefono', 'perfil', 'status'];
 const fieldsGetTokenInfo = ['token'];
 const fieldsGetLoginUser = ['correo', 'password'];
 const fieldsGetLogoutUser = ['token'];

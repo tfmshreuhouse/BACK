@@ -112,13 +112,14 @@ exports.getAccesoPrograma = async (req, res, next) => {
 
 exports.postCreateUser = async (req, res, next) => {
 
-    const { nombres, apellidos, correo, password, perfil, status } = req.body;
+    const { nombres, apellidos, correo, telefono, password, perfil, status } = req.body;
 
     try {
         const newUser = await User.create({
             nombres: nombres,
             apellidos: apellidos,
             correo: correo,
+            telefono: telefono,
             password: password,
             perfil: perfil,
             status: status
@@ -219,6 +220,7 @@ exports.putUpdateUserInfo = async (req, res, next) => {
         nombres: req.body.nombres,
         apellidos: req.body.apellidos,
         correo: req.body.correo,
+        telefono: req.body.telefono,
         perfil: req.body.perfil,
         status: req.body.status
     }
