@@ -34,91 +34,69 @@ module.exports = (sequelize, DataTypes) => {
                 }
             }
         },
-        web: {
+        master: {
             type: DataTypes.INTEGER,
             allowNull: {
-                msg: "Perfil web no puede ser nulo"
+                msg: "Perfil master no puede ser nulo"
             },
             validate: {
                 notEmpty: {
-                    msg: "Perfil web no puede ser vacio"
+                    msg: "Perfil master no puede ser vacio"
                 },
                 isInt: {
-                    msg: "Perfil web debe ser INTEGER"
+                    msg: "Perfil master debe ser INTEGER"
                 },
                 min: {
                     args: [0],
-                    msg: "Perfil web debe ser minimo 0"
+                    msg: "Perfil master debe ser minimo 0"
                 },
                 max: {
                     args: [1],
-                    msg: "Perfil web debe ser maximo 1"
+                    msg: "Perfil master debe ser maximo 1"
                 }
             }
         },
-        hostess: {
+        cliente: {
             type: DataTypes.INTEGER,
             allowNull: {
-                msg: "Perfil hostess no puede ser nulo"
+                msg: "Perfil cliente no puede ser nulo"
             },
             validate: {
                 notEmpty: {
-                    msg: "Perfil hostess no puede ser vacio"
+                    msg: "Perfil cliente no puede ser vacio"
                 },
                 isInt: {
-                    msg: "Perfil hostess debe ser INTEGER"
+                    msg: "Perfil cliente debe ser INTEGER"
                 },
                 min: {
                     args: [0],
-                    msg: "Perfil hostess debe ser minimo 0"
+                    msg: "Perfil cliente debe ser minimo 0"
                 },
                 max: {
                     args: [1],
-                    msg: "Perfil hostess debe ser maximo 1"
+                    msg: "Perfil cliente debe ser maximo 1"
                 }
             }
         },
-        capitan: {
+        arrendador: {
             type: DataTypes.INTEGER,
             allowNull: {
-                msg: "Perfil capitan no puede ser nulo"
+                msg: "Perfil arrendador no puede ser nulo"
             },
             validate: {
                 notEmpty: {
-                    msg: "Perfil capitan no puede ser vacio"
+                    msg: "Perfil arrendador no puede ser vacio"
                 },
                 isInt: {
-                    msg: "Perfil capitan debe ser INTEGER"
+                    msg: "Perfil arrendador debe ser INTEGER"
                 },
                 min: {
                     args: [0],
-                    msg: "Perfil capitan debe ser minimo 0"
+                    msg: "Perfil arrendador debe ser minimo 0"
                 },
                 max: {
                     args: [1],
-                    msg: "Perfil capitan debe ser maximo 1"
-                }
-            }
-        },
-        champion: {
-            type: DataTypes.INTEGER,
-            allowNull: {
-                msg: "Perfil champion no puede ser nulo"
-            },
-            validate: {
-                notEmpty: {
-                    msg: "Perfil champion no puede ser vacio"
-                },
-                isInt: {
-                    msg: "Perfil champion debe ser INTEGER"
-                },
-                min: {
-                    args: [0],
-                    msg: "Perfil champion debe ser minimo 0"
-                },
-                max: {
-                    args: [1],
-                    msg: "Perfil champion debe ser maximo 1"
+                    msg: "Perfil arrendador debe ser maximo 1"
                 }
             }
         }
