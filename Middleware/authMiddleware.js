@@ -6,7 +6,10 @@ const { helperTokenExpiration } = require('../Helpers/AuthHelper');
 const requireAuth = async (req, res, next) => {
 
     try {
-        const tokenInfo = await middlewareValidarToken(req.query.token);
+        const authorization = req.headers.authorization
+        const token = authorization.split("Bearer ")[1] // Bearer xxxx
+
+        const tokenInfo = await middlewareValidarToken(token);
         //console.log(tokenInfo);
 
         if (tokenInfo.success) {
