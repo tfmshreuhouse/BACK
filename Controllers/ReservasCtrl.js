@@ -1,14 +1,16 @@
-const { TiposInmuebles } = require('../models');
+const { Reservas, Publicaciones, User } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
 
 exports.getAll = async (req, res, next) => {
 
     try {
-        const all = await TiposInmuebles.findAll({
+        const all = await Reservas.findAll({
             order: [
-                ['tipo', 'ASC'],
-            ]
+                ['updatedAt', 'ASC'],
+            ],
+            include: [{ model: Publicaciones },
+                      { model: User}]
         });
         res.status(200).json({
             success: true,
@@ -25,17 +27,19 @@ exports.getAll = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
 
-    let tipo = req.query.tipo;
+    let reserva = req.body
 
-    console.log("tipo " + tipo)
+    console.log("reserva " + JSON.stringify(reserva))
 
     try {
-        const newUser = await TiposInmuebles.create({
-            tipo: tipo
+        const newReserva = await Reservas.create({
+            status: reserva.status,
+            PublicacioneId: reserva.PublicacioneId,
+            UserId: reserva.UserId
         });
         res.status(201).json({
             success: true,
-            data: newUser
+            data: newReserva
         });
     } catch (err) {
         res.status(400).json({
@@ -48,29 +52,28 @@ exports.create = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
 
-    let tipoInmuebleReq = {
-        id: req.body.id,
-        tipo: req.body.tipo,
-    }
+    let reserva = req.body;
 
-    console.log(tipoInmuebleReq.id + " - " + tipoInmuebleReq.tipo)
+    console.log(reserva.id + " - " + reserva.status)
 
     try {
-        let tipoInmuebleDB = await TiposInmuebles.findOne({
-            where: { id: tipoInmuebleReq.id },
+        let reservaDB = await Reservas.findOne({
+            where: { id: reserva.id },
             attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
 
-        tipoInmuebleDB.set({
-            id: tipoInmuebleReq.id,
-            tipo: tipoInmuebleReq.tipo
+        reservaDB.set({
+            id: reserva.id,
+            status: reserva.status,
+            PublicacioneId: reserva.PublicacioneId,
+            UserId: reserva.UserId
         });
 
-        let tipoInmuebleUpdate = await tipoInmuebleDB.save();
+        let reservaUpdate = await reservaDB.save();
 
         res.status(201).json({
             success: true,
-            data: tipoInmuebleUpdate
+            data: reservaUpdate
         });
     } catch (err) {
         res.status(400).json({
@@ -89,7 +92,7 @@ exports.delete = async (req, res, next) => {
 
     try {
 
-        await TiposInmuebles.destroy({
+        await Reservas.destroy({
             where: {
               id: id
             }
