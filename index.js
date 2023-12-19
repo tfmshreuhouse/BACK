@@ -17,6 +17,7 @@ app.use(express.json());
 require('dotenv').config();
 
 const authRoutes = require('./Routes/AuthRoutes');
+const restRoutes = require('./Routes/RestRoutes');
 
 const db = require('./models')
 const { requireAuth } = require('./Middleware/authMiddleware');
@@ -33,3 +34,5 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRoutes);
+
+app.use('/rest', restRoutes);
