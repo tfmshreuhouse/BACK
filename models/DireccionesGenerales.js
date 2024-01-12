@@ -4,9 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     const direccionesGenerales = sequelize.define('DireccionesGenerales', {
         comunidad: {
             type: DataTypes.STRING,
-            allowNull: {
-                msg: "errorDireccionesGeneralesModel1"
-            },
+            allowNull: false,
             validate: {
                 notEmpty: {
                     msg: "errorDireccionesGeneralesModel2"
@@ -15,9 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         provincia: {
             type: DataTypes.STRING,
-            allowNull: {
-                msg: "errorDireccionesGeneralesModel3"
-            },
+            allowNull: false,
             validate: {
                 notEmpty: {
                     msg: "errorDireccionesGeneralesModel4"
@@ -26,9 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         ciudad: {
             type: DataTypes.STRING,
-            allowNull: {
-                msg: "errorDireccionesGeneralesModel5"
-            },
+            allowNull: false,
             validate: {
                 notEmpty: {
                     msg: "errorDireccionesGeneralesModel6"
