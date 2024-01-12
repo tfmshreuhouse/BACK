@@ -6,13 +6,13 @@ exports.create = async (req, res, next) => {
 
     let direcReq = req.body;
 
-    console.log("tipo " + JSON.stringify(direcReq));
+    console.log("create " + JSON.stringify(direcReq));
 
     try {
-        const newInmueble = await DireccionesGenerales.create(direcReq);
+        const newDirecc = await DireccionesGenerales.create(direcReq);
         res.status(201).json({
             success: true,
-            data: newInmueble
+            data: newDirecc
         });
     } catch (err) {
         res.status(400).json({

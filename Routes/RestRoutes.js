@@ -3,6 +3,7 @@ const router = express.Router();
 const tiposInmueblesController = require('../Controllers/TiposInmueblesCtrl')
 const reservasCtrl = require('../Controllers/ReservasCtrl')
 const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl')
+const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl')
 const { requireAuth } = require('../Middleware/authMiddleware');
 
 const fieldsPutUpdateUser = ['id', 'tipo'];
@@ -21,5 +22,9 @@ router.delete("/reservas/:id", requireAuth, reservasCtrl.delete)
 router.post("/direcGeneral", requireAuth, direcGeneralCtrl.create)
 router.patch("/direcGeneral", requireAuth, direcGeneralCtrl.update)
 router.delete("/direcGeneral/:id", requireAuth, direcGeneralCtrl.delete)
+
+router.post("/direcParticular", requireAuth, direcParticularCtrl.create)
+router.patch("/direcParticular", requireAuth, direcParticularCtrl.update)
+router.delete("/direcParticular/:id", requireAuth, direcParticularCtrl.delete)
 
 module.exports = router;
