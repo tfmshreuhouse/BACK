@@ -7,7 +7,7 @@ const requireAuth = async (req, res, next) => {
 
     try {
         const authorization = req.headers.authorization
-        const token = authorization.split("Bearer ")[1] // Bearer xxxx
+        const token = authorization?.split("Bearer ")[1] // Bearer xxxx
 
         const tokenInfo = await middlewareValidarToken(token);
         //console.log(tokenInfo);

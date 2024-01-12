@@ -4,9 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     const tiposInmuebles = sequelize.define('TiposInmuebles', {
         tipo: {
             type: DataTypes.STRING,
-            allowNull: {
-                msg: "errorTiposInmueblesModel1"
-            },
+            allowNull: false,
             validate: {
                 notEmpty: {
                     msg: "errorTiposInmueblesModel2"

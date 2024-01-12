@@ -4,9 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     const reservas = sequelize.define('Reservas', {
         status: {
             type: DataTypes.INTEGER,
-            allowNull: {
-                msg: "errorReservasModel1"
-            },
+            allowNull: false,
             validate: {
                 notEmpty: {
                     msg: "errorReservasModel2"
@@ -15,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
                     msg: "errorReservasModel3"
                 },
                 min: {
-                    args: [0],
+                    args: [1],
                     msg: "errorReservasModel4"
                 },
                 max: {
@@ -23,6 +21,28 @@ module.exports = (sequelize, DataTypes) => {
                     msg: "errorReservasModel5"
                 }
             }
+        },
+        fechaInicio: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            validate: {
+              customValidator(value) {
+                if (new Date(value) < new Date()) {
+                  throw new Error("la fecha inicio de la reserva debe ser mayor o igual a la de hoy");
+                }
+              },
+            },
+        },
+        fechaFin: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            validate: {
+              customValidator(value) {
+                if (new Date(value) < new Date()) {
+                  throw new Error("la fecha inicio de la reserva debe ser mayor o igual a la de hoy");
+                }
+              },
+            },
         },
 
     });
