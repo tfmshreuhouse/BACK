@@ -25,6 +25,39 @@ exports.getAll = async (req, res, next) => {
 
 };
 
+exports.getFilter = async (req, res, next) => {
+
+    let status = req.query.status;
+    let userId = req.query.userId;
+    let publicacionId = req.query.publicacionId;
+
+    let query = {};
+    if (status != null && status != undefined) query.status = status;
+    if (userId != null && userId != undefined) query.userId = userId;
+    if (publicacionId != null && publicacionId != undefined) query.publicacionId = publicacionId;
+
+    try {
+        const all = await Reservas.findAll({
+            order: [
+                ['updatedAt', 'ASC'],
+            ],
+            where: query,
+            include: [{ model: Publicaciones },
+                      { model: User}]
+        });
+        res.status(200).json({
+            success: true,
+            data: all
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    }
+
+};
+
 exports.create = async (req, res, next) => {
 
     let reserva = req.body

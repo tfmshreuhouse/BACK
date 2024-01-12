@@ -12,6 +12,7 @@ router.patch("/tipos-inmuebles", requireAuth, tiposInmueblesController.update)
 router.delete("/tipos-inmuebles/:id", requireAuth, tiposInmueblesController.delete)
 
 router.get("/reservas", requireAuth, reservasCtrl.getAll)
+router.get("/reservas/filter", requireAuth, reservasCtrl.getFilter)
 router.post("/reservas", requireAuth, reservasCtrl.create)
 router.patch("/reservas", requireAuth, reservasCtrl.update)
 router.delete("/reservas/:id", requireAuth, reservasCtrl.delete)
