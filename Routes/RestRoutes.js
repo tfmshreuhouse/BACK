@@ -4,6 +4,8 @@ const tiposInmueblesController = require('../Controllers/TiposInmueblesCtrl')
 const reservasCtrl = require('../Controllers/ReservasCtrl')
 const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl')
 const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl')
+const inmueblesCtrl = require('../Controllers/InmueblesCtrl')
+const publicacion = require('../Controllers/PublicacionCtrl')
 const { requireAuth } = require('../Middleware/authMiddleware');
 
 const fieldsPutUpdateUser = ['id', 'tipo'];
@@ -26,5 +28,14 @@ router.delete("/direcGeneral/:id", requireAuth, direcGeneralCtrl.delete)
 router.post("/direcParticular", requireAuth, direcParticularCtrl.create)
 router.patch("/direcParticular", requireAuth, direcParticularCtrl.update)
 router.delete("/direcParticular/:id", requireAuth, direcParticularCtrl.delete)
+
+router.get("/inmuebles", requireAuth, inmueblesCtrl.getAll)
+router.post("/inmuebles", requireAuth, inmueblesCtrl.create)
+router.patch("/inmuebles", requireAuth, inmueblesCtrl.update)
+router.delete("/inmuebles/:id", requireAuth, inmueblesCtrl.delete)
+
+router.get("/publicacion", requireAuth, publicacion.getAll)
+router.post("/publicacion", requireAuth, publicacion.create)
+router.patch("/publicacion", requireAuth, publicacion.update)
 
 module.exports = router;
