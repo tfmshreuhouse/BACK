@@ -377,14 +377,6 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     });
-
-    DetallesInmuebles.associate = (models) => {
-        DetallesInmuebles.belongsTo(models.Inmuebles, {
-          foreignKey: {
-            allowNull: false,
-          },
-        });
-      };
-
+   
     return DetallesInmuebles;
 }

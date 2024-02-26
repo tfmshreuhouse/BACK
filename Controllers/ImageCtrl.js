@@ -1,6 +1,6 @@
 const { ImagnenesInmuebles } = require('../models');
 
-exports.postImage = async (req, res, next) => {
+exports.create = async (req, res, next) => {
     const { URL, status} = req.body;
 
     try{
@@ -18,7 +18,7 @@ exports.postImage = async (req, res, next) => {
 
 }
 
-exports.putImage = async (req, res, next) => {
+exports.update = async (req, res, next) => {
 
     const imagereq = { 
         id: req.body.id,
@@ -47,3 +47,26 @@ exports.putImage = async (req, res, next) => {
         });
     }
 }
+
+exports.delete = async (req, res, next) => {
+
+    let id  = req.params.id;
+
+    try {
+
+        await ImagnenesInmuebles.destroy({
+            where: {
+              id: id
+            }
+          });
+
+        res.status(200).json({
+            success: true
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: errorModelUser(err)
+        });
+    }
+};

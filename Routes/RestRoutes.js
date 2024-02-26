@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const tiposInmueblesController = require('../Controllers/TiposInmueblesCtrl')
-const reservasCtrl = require('../Controllers/ReservasCtrl')
-const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl')
-const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl')
-const inmueblesCtrl = require('../Controllers/InmueblesCtrl')
-const publicacion = require('../Controllers/PublicacionCtrl')
+const tiposInmueblesController = require('../Controllers/TiposInmueblesCtrl');
+const reservasCtrl = require('../Controllers/ReservasCtrl');
+const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl');
+const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl');
+const inmueblesCtrl = require('../Controllers/InmueblesCtrl');
+const publicacion = require('../Controllers/PublicacionCtrl');
+const DetallesInmuebles = require('../Controllers/DetailCtrl');
+const ImagnenesInmuebles = require('../Controllers/ImageCtrl');
 const { requireAuth } = require('../Middleware/authMiddleware');
 
 const fieldsPutUpdateUser = ['id', 'tipo'];
@@ -37,5 +39,13 @@ router.delete("/inmuebles/:id", requireAuth, inmueblesCtrl.delete)
 router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)
 router.patch("/publicacion", requireAuth, publicacion.update)
+
+router.post("/DetallesInmuebles", requireAuth, DetallesInmuebles.create)
+router.patch("/DetallesInmuebles", requireAuth, DetallesInmuebles.update)
+router.delete("/DetallesInmuebles/:id", requireAuth, DetallesInmuebles.delete)
+
+router.post("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.create)
+router.patch("/Inmueblesmuebles", requireAuth, ImagnenesInmuebles.update)
+router.delete("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.delete)
 
 module.exports = router;

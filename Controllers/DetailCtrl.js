@@ -2,7 +2,7 @@ const { DetallesInmuebles } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 const { helperCompararDetails } = require('../Helpers/DetailHelper');
 
-exports.postSaveDatail = async (req, res, next) => {
+exports.create = async (req, res, next) => {
 
     const { pisos, habitaciones, banosCompletos, banosMedios, cocina, lavado, patio, balcon, 
         estacionamiento, elevador, piscina, areasPublicas, fumar, mascotas, reuniones, descripcion, 
@@ -41,7 +41,7 @@ exports.postSaveDatail = async (req, res, next) => {
     }
 }
 
-exports.putUpdateDatail = async (req, res, next) => {
+exports.update = async (req, res, next) => {
 
     const detailreq = { 
         id: req.body.id, 
@@ -64,44 +64,67 @@ exports.putUpdateDatail = async (req, res, next) => {
         indicaciones: req.body.indicaciones, 
         status: req.body.status } = req.body;
 
-        try {
-            const detailDb = await DetallesInmuebles.findOne({
-                where: { id: detailreq.id }
-            });
-    
-            const datail = helperCompararDetails(detailreq, detailDb);
-    
-            detailDb.set({
-                pisos: datail.pisos,
-                habitaciones: datail.habitaciones,
-                banosCompletos: datail.banosCompletos,
-                banosMedios: datail.banosMedios,
-                cocina: datail.cocina,
-                patio: datail.patio,
-                balcon: datail.balcon,
-                estacionamiento: datail.estacionamiento,
-                elevador: datail.elevador,
-                piscina: datail.piscina,
-                areasPublicas: datail.areasPublicas,
-                fumar: datail.fumar,
-                mascotas: datail.mascotas,
-                reuniones: datail.reuniones,
-                descripcion: datail.descripcion,
-                indicaciones: datail.indicaciones,
-                lavado: datail.lavado,
-                status: datail.status
-            });
-    
-            const DetailUpdate = await detailDb.save();
-    
-            res.status(201).json({
-                success: true,
-                data: DetailUpdate
-            });
-        } catch (err) {
-            res.status(400).json({
-                success: false,
-                error: errorModelUser(err)
-            });
-        }
+    try {
+        const detailDb = await DetallesInmuebles.findOne({
+            where: { id: detailreq.id }
+        });
+
+        const datail = helperCompararDetails(detailreq, detailDb);
+
+        detailDb.set({
+            pisos: datail.pisos,
+            habitaciones: datail.habitaciones,
+            banosCompletos: datail.banosCompletos,
+            banosMedios: datail.banosMedios,
+            cocina: datail.cocina,
+            patio: datail.patio,
+            balcon: datail.balcon,
+            estacionamiento: datail.estacionamiento,
+            elevador: datail.elevador,
+            piscina: datail.piscina,
+            areasPublicas: datail.areasPublicas,
+            fumar: datail.fumar,
+            mascotas: datail.mascotas,
+            reuniones: datail.reuniones,
+            descripcion: datail.descripcion,
+            indicaciones: datail.indicaciones,
+            lavado: datail.lavado,
+            status: datail.status
+        });
+
+        const DetailUpdate = await detailDb.save();
+
+        res.status(201).json({
+            success: true,
+            data: DetailUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: errorModelUser(err)
+        });
+    }
 }
+
+exports.delete = async (req, res, next) => {
+
+    let id  = req.params.id;
+
+    try {
+
+        await DetallesInmuebles.destroy({
+            where: {
+              id: id
+            }
+          });
+
+        res.status(200).json({
+            success: true
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: errorModelUser(err)
+        });
+    }
+};

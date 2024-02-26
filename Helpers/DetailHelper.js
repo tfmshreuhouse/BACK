@@ -13,7 +13,7 @@ const helperCompararDetails = (detailreq, detailDb) => {
     deatilNew.patio = detailreq.patio != detailDb.patio ? detailreq.patio: detailDb.patio;
     deatilNew.balcon = detailreq.balcon != detailDb.balcon ? detailreq.balcon: detailDb.balcon;
     deatilNew.estacionamiento = detailreq.estacionamiento != detailDb.estacionamiento ? detailreq.estacionamiento: detailDb.estacionamiento;
-    detaideatilNewlDb.elevador = detailreq.elevador != detailDb.elevador ? detailreq.elevador: detailDb.elevador;
+    deatilNew.elevador = detailreq.elevador != detailDb.elevador ? detailreq.elevador: detailDb.elevador;
     deatilNew.piscina = detailreq.piscina != detailDb.piscina ? detailreq.piscina: detailDb.piscina;
     deatilNew.areasPublicas = detailreq.areasPublicas != detailDb.areasPublicas ? detailreq.areasPublicas: detailDb.areasPublicas;
     deatilNew.fumar = detailreq.fumar != detailDb.fumar ? detailreq.fumar: detailDb.fumar;
@@ -27,4 +27,4 @@ const helperCompararDetails = (detailreq, detailDb) => {
     return deatilNew;
 }
 
-export {helperCompararDetails}
+module.exports = {helperCompararDetails}
