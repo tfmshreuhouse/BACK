@@ -1,18 +1,26 @@
 const { ImagnenesInmuebles } = require('../models');
 
 exports.create = async (req, res, next) => {
-    const { URL, status} = req.body;
+
+    const { URL, status, InmuebleId} = req.body;
+
+    console.log(req.body);
 
     try{
-        const image = await DetallesInmuebles.create({
+        const image = await ImagnenesInmuebles.create({
             URL: URL,
-            status: status,            
-        })
+            status: status,   
+            InmuebleId: InmuebleId
+        });
+        res.status(201).json({
+            success: true,
+            data: image
+        });
 
     }catch(err){
         res.status(400).json({
             success: false,
-            error: errorModelUser(err)
+            error: err
         });
     }
 
