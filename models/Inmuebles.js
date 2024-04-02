@@ -3,36 +3,36 @@ module.exports = (sequelize, DataTypes) => {
 
     const Inmuebles = sequelize.define('Inmuebles', {
         Pais: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: {
-                msg: "errorInmueblesModel1"
+                msg: "Nombre del pais no puede ser nulo"
             },
             validate: {
                 notEmpty: {
-                    msg: "errorInmueblesModel2"
-                },
+                    msg: "Nombre del pais no puede ser vacio"
+                }
             }
         },
         Ciudad: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: {
-                msg: "errorInmueblesModel3"
+                msg: "Nombre de la ciudad no puede ser nulo"
             },
             validate: {
                 notEmpty: {
-                    msg: "errorInmueblesModel4"
-                },
+                    msg: "Nombre de la ciudad no puede ser vacio"
+                }
             }
         },
         Direccion: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: {
-                msg: "errorInmueblesModel5"
+                msg: "Nombre de la direccion no puede ser nulo"
             },
             validate: {
                 notEmpty: {
-                    msg: "errorInmueblesModel6"
-                },
+                    msg: "Nombre de la direccion no puede ser vacio"
+                }
             }
         }
     });

@@ -35,6 +35,7 @@ router.get("/inmuebles", requireAuth, inmueblesCtrl.getAll)
 router.post("/inmuebles", requireAuth, inmueblesCtrl.create)
 router.patch("/inmuebles", requireAuth, inmueblesCtrl.update)
 router.delete("/inmuebles/:id", requireAuth, inmueblesCtrl.delete)
+router.get("/inmuebles/:id", requireAuth, inmueblesCtrl.get)
 
 router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)
@@ -47,5 +48,6 @@ router.delete("/DetallesInmuebles/:id", requireAuth, DetallesInmuebles.delete)
 router.post("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.create)
 router.patch("/Inmueblesmuebles", requireAuth, ImagnenesInmuebles.update)
 router.delete("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.delete)
+router.get("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.get)
 
 module.exports = router;

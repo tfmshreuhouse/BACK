@@ -47,7 +47,7 @@ exports.getTokenInfo = async (req, res, next) => {
                 }
             }
         }
-        removeSubkey(tokenInfo, "userID");
+        //removeSubkey(tokenInfo, "userID");
 
         if (tokenInfo.success) {
             res.status(200).json(tokenInfo);

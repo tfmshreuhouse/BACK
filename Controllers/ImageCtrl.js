@@ -78,3 +78,29 @@ exports.delete = async (req, res, next) => {
         });
     }
 };
+
+exports.get = async (req, res, next) => {
+
+    let id  = req.params.id;
+
+    try {
+        const all = await ImagnenesInmuebles.findAll({
+            order: [
+                ['updatedAt', 'ASC'],
+            ],
+            where: {
+                InmuebleId: id
+              }            
+        });
+        res.status(200).json({
+            success: true,
+            data: all
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: "errorServer1 " + err
+        });
+    }
+
+};
