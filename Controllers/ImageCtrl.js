@@ -1,18 +1,26 @@
 const { ImagnenesInmuebles } = require('../models');
 
 exports.create = async (req, res, next) => {
-    const { URL, status} = req.body;
+
+    const { URL, status, InmuebleId} = req.body;
+
+    console.log(req.body);
 
     try{
-        const image = await DetallesInmuebles.create({
+        const image = await ImagnenesInmuebles.create({
             URL: URL,
-            status: status,            
-        })
+            status: status,   
+            InmuebleId: InmuebleId
+        });
+        res.status(201).json({
+            success: true,
+            data: image
+        });
 
     }catch(err){
         res.status(400).json({
             success: false,
-            error: errorModelUser(err)
+            error: err
         });
     }
 
@@ -69,4 +77,30 @@ exports.delete = async (req, res, next) => {
             error: errorModelUser(err)
         });
     }
+};
+
+exports.get = async (req, res, next) => {
+
+    let id  = req.params.id;
+
+    try {
+        const all = await ImagnenesInmuebles.findAll({
+            order: [
+                ['updatedAt', 'ASC'],
+            ],
+            where: {
+                InmuebleId: id
+              }            
+        });
+        res.status(200).json({
+            success: true,
+            data: all
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: "errorServer1 " + err
+        });
+    }
+
 };

@@ -2,20 +2,42 @@
 module.exports = (sequelize, DataTypes) => {
 
     const Inmuebles = sequelize.define('Inmuebles', {
-
+        Pais: {
+            type: DataTypes.STRING,
+            allowNull: {
+                msg: "Nombre del pais no puede ser nulo"
+            },
+            validate: {
+                notEmpty: {
+                    msg: "Nombre del pais no puede ser vacio"
+                }
+            }
+        },
+        Ciudad: {
+            type: DataTypes.STRING,
+            allowNull: {
+                msg: "Nombre de la ciudad no puede ser nulo"
+            },
+            validate: {
+                notEmpty: {
+                    msg: "Nombre de la ciudad no puede ser vacio"
+                }
+            }
+        },
+        Direccion: {
+            type: DataTypes.STRING,
+            allowNull: {
+                msg: "Nombre de la direccion no puede ser nulo"
+            },
+            validate: {
+                notEmpty: {
+                    msg: "Nombre de la direccion no puede ser vacio"
+                }
+            }
+        }
     });
 
     Inmuebles.associate = (models) => {
-        Inmuebles.belongsTo(models.DireccionesGenerales, {
-            foreignKey: {
-                allowNull: false,
-            },
-        });
-        Inmuebles.belongsTo(models.DireccionesParticulares, {
-            foreignKey: {
-                allowNull: false,
-            },
-        });
         Inmuebles.belongsTo(models.TiposInmuebles, {
             foreignKey: {
                 allowNull: false,

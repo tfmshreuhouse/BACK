@@ -9,9 +9,7 @@ exports.getAll = async (req, res, next) => {
             order: [
                 ['updatedAt', 'ASC'],
             ],
-            include: [{ model: DireccionesGenerales },
-                      { model: DireccionesParticulares },
-                      { model: TiposInmuebles },
+            include: [{ model: TiposInmuebles },
                       { model: DetallesInmuebles },
                       { model: User}]
         });
@@ -31,12 +29,14 @@ exports.getAll = async (req, res, next) => {
 exports.create = async (req, res, next) => {
 
     let Inmueble = req.body
+    console.log(Inmueble.DireccionesGenerales);
 
     try {
         const newInmueble = await Inmuebles.create({
-            DireccionGeneralId: Inmueble.DireccionesGenerales,
-            DireccionesParticularesId: Inmueble.DireccionesParticulares,
-            TipoInmuebleId : Inmueble.TiposInmuebles,
+            Pais: Inmueble.Pais,
+            Ciudad: Inmueble.Ciudad,
+            Direccion: Inmueble.Direccion,
+            TiposInmuebleId : Inmueble.TiposInmuebleId,
             DetallesInmuebleId : Inmueble.DetallesInmuebles,
             UserId: Inmueble.UserId
         });
@@ -107,6 +107,32 @@ exports.delete = async (req, res, next) => {
         res.status(400).json({
             success: false,
             error: errorModelUser(err)
+        });
+    }
+
+};
+
+exports.get = async (req, res, next) => {
+
+    let id  = req.params.id;
+
+    try {
+        const all = await Inmuebles.findOne({
+            where: {
+                id: id
+              },
+            include: [{ model: TiposInmuebles },
+                      { model: DetallesInmuebles },
+                      { model: User}]
+        });
+        res.status(200).json({
+            success: true,
+            data: all
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: "errorServer1 " + err
         });
     }
 
