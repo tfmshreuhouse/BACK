@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
 
     var regexStringAlfabetico = /^[a-zA-Z\s]*$/;
-    const regexNumerico = /^[0-9]+$/;
+    const regexNumerico = /^\+(?:[0-9] ?){6,14}[0-9]$/;
     const regexStringCorreo = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
     const User = sequelize.define('User', {
@@ -122,7 +122,7 @@ module.exports = (sequelize, DataTypes) => {
                     msg: "errorUserModel24"
                 },
                 len: {
-                    args: [8, 9],
+                    args: [9, 14],
                     msg: "errorUserModel25"
                 }
             }
