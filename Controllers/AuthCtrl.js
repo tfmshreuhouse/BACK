@@ -254,5 +254,30 @@ exports.putUpdateUserInfo = async (req, res, next) => {
             error: errorModelUser(err)
         });
     }
+};
 
+exports.getUserById = async (req, res, next) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] }
+        });
+        if (user) {
+            res.status(200).json({
+                success: true,
+                data: user
+            });
+        } else {
+            res.status(404).json({
+                success: false,
+                error: "Usuario no encontrado"
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: "Error del servidor"
+        });
+    }
 };

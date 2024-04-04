@@ -6,6 +6,7 @@ const { middlewareValidateRequestFields, middlewareValidateRequestValues } = req
 const fieldsPostCreateUser = ['nombres', 'apellidos', 'correo', 'telefono', 'password', 'perfil', 'status'];
 const fieldsPutUpdateUser = ['id', 'nombres', 'apellidos', 'correo', 'telefono', 'perfil', 'status'];
 const fieldsGetTokenInfo = ['token'];
+const fieldsGetUserInfo = ['token'];
 const fieldsGetLoginUser = ['correo', 'password'];
 const fieldsGetLogoutUser = ['token'];
 const fieldsGetAccesoPrograma = ['token', 'programa'];
@@ -15,7 +16,10 @@ router.get("", authController.getALLUsers);
 
 //GET Token info
 router.get("/token/info", middlewareValidateRequestFields("query", fieldsGetTokenInfo, "errorAuthReqBody2"), authController.getTokenInfo);
-//router.get("/token/info", authController.getTokenInfo);
+
+//GET user info
+router.get("/user/info/:id", authController.getUserById);
+
 
 //GET Logout
 router.get("/logout", middlewareValidateRequestFields("query", fieldsGetLogoutUser, "errorAuthReqBody5"), middlewareValidateRequestValues("query", fieldsGetLogoutUser, "errorAuthReqBody6"), authController.getLogoutUser);
