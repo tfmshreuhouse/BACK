@@ -2,6 +2,17 @@
 module.exports = (sequelize, DataTypes) => {
 
     const Inmuebles = sequelize.define('Inmuebles', {
+        Nombre: {
+            type: DataTypes.STRING,
+            allowNull: {
+                msg: "Nombre del inmueble no puede ser nulo"
+            },
+            validate: {
+                notEmpty: {
+                    msg: "Nombre del inmueble no puede ser vacio"
+                }
+            }
+        },
         Pais: {
             type: DataTypes.STRING,
             allowNull: {
