@@ -59,15 +59,14 @@ exports.update = async (req, res, next) => {
 
     try {
         let InmuebleDB = await Inmuebles.findOne({
-            where: { id: Inmueble.id },
-            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            where: { id: Inmueble.id }
         });
 
         InmuebleDB.set({
-            id: Inmueble.id,
-            DireccionGeneralId: Inmueble.DireccionesGenerales,
-            DireccionesParticularesId: Inmueble.DireccionesParticulares,
-            TipoInmuebleId : Inmueble.TiposInmuebles,
+            Pais: Inmueble.Pais,
+            Ciudad: Inmueble.Ciudad,
+            Direccion: Inmueble.Direccion,
+            TiposInmuebleId : Inmueble.TiposInmuebleId,
             DetallesInmuebleId : Inmueble.DetallesInmuebles,
             UserId: Inmueble.UserId
         });

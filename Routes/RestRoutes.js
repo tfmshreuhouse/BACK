@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const tiposInmueblesController = require('../Controllers/TiposInmueblesCtrl');
 const reservasCtrl = require('../Controllers/ReservasCtrl');
+const denunciasCtrl = require('../Controllers/DenunciaCtrl');
 const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl');
 const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl');
 const inmueblesCtrl = require('../Controllers/InmueblesCtrl');
@@ -50,5 +51,11 @@ router.post("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.create)
 router.patch("/Inmueblesmuebles", requireAuth, ImagnenesInmuebles.update)
 router.delete("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.delete)
 router.get("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.get)
+
+router.get("/denuncias", requireAuth, denunciasCtrl.getAll)
+router.get("/denuncias/filter", requireAuth, denunciasCtrl.getFilter)
+router.post("/denuncias", requireAuth, denunciasCtrl.create)
+router.patch("/denuncias", requireAuth, denunciasCtrl.update)
+router.delete("/denuncias/:id", requireAuth, denunciasCtrl.delete)
 
 module.exports = router;
