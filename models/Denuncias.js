@@ -2,6 +2,13 @@
 module.exports = (sequelize, DataTypes) => {
 
     const denuncias = sequelize.define('Denuncias', {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            allowNull: {
+                msg: "errorDenunciasModel1"
+            }
+        },
         motivo: {
             type: DataTypes.STRING,
             allowNull: {
