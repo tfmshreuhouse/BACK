@@ -1,5 +1,6 @@
-const { Reservas, Publicaciones, User } = require('../models');
+const { Reservas, Publicaciones, User, Inmuebles, sequelize  } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
+const { Op } = require('sequelize');
 require('dotenv').config();
 
 exports.getAll = async (req, res, next) => {
@@ -191,4 +192,43 @@ exports.delete = async (req, res, next) => {
         });
     }
 
+};
+exports.getReservaUser = async (req, res, next) => {
+    const userId = req.params.id;
+
+    try {
+        const userReservas = await Reservas.findAll({
+            where: {
+                UserId: userId
+            },
+            attributes: [
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaInicio'), '%d-%m-%Y'), 'fechaInicio'],
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaFin'), '%d-%m-%Y'), 'fechaFin']
+            ],
+            include: [
+                {
+                    model: Publicaciones,
+                    include: [
+                        {
+                            model: Inmuebles,
+                            attributes: ['id', 'Pais', 'Ciudad', 'Direccion']
+                        }
+                    ],
+                    attributes: ['fechaActiva', 'fechaInActiva', 'costo']
+                }
+            ]
+        });
+
+        res.status(200).json({
+            success: true,
+            data: userReservas
+        });
+    } catch (error) {
+        // Manejar errores
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
 };

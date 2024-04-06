@@ -19,6 +19,7 @@ router.delete("/tipos-inmuebles/:id", requireAuth, tiposInmueblesController.dele
 
 router.get("/reservas", requireAuth, reservasCtrl.getAll)
 router.get("/reservas/filter", requireAuth, reservasCtrl.getFilter)
+router.get("/reservas/User/:id", requireAuth, reservasCtrl.getReservaUser)
 router.post("/reservas", requireAuth, reservasCtrl.create)
 router.patch("/reservas", requireAuth, reservasCtrl.update)
 router.delete("/reservas/:id", requireAuth, reservasCtrl.delete)
