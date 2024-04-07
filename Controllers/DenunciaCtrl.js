@@ -42,7 +42,7 @@ exports.getPublicacionesWithDenuncias = (req, res, next) => {
         },
         {
             model: Inmuebles,
-            attributes:['Nombre', 'Pais', 'Ciudad', 'Direccion'],
+            attributes:['id', 'Nombre', 'Pais', 'Ciudad', 'Direccion'],
             include: [
                 {
                   model: ImagnenesInmuebles,
