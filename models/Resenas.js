@@ -1,61 +1,56 @@
-
 module.exports = (sequelize, DataTypes) => {
-
-    const resenas = sequelize.define('Resenas', {
-        titulo: {
-            type: DataTypes.STRING,
-            allowNull: {
-                msg: "errorResenasModel1"
-            },
-            validate: {
-                notEmpty: {
-                    msg: "errorResenasModel2"
-                }
-            }
-        },
+    const Resenas = sequelize.define('Resenas', {
         descripcion: {
             type: DataTypes.STRING,
-            allowNull: {
-                msg: "errorResenasModel3"
-            },
+            allowNull: true, // Permitir valores nulos según la definición de la tabla
+            defaultValue: null,
             validate: {
                 notEmpty: {
-                    msg: "errorResenasModel4"
+                    msg: "La descripción es requerida"
                 }
             }
         },
         rating: {
             type: DataTypes.INTEGER,
-            allowNull: {
-                msg: "errorResenasModel5"
-            },
+            allowNull: true, // Permitir valores nulos según la definición de la tabla
+            defaultValue: null,
             validate: {
-                notEmpty: {
-                    msg: "errorResenasModel6"
-                },
                 isInt: {
-                    msg: "errorResenasModel7"
+                    msg: "El rating debe ser un número entero"
                 },
                 min: {
                     args: [0],
-                    msg: "errorResenasModel8"
+                    msg: "El rating mínimo permitido es 0"
                 },
                 max: {
                     args: [5],
-                    msg: "errorResenasModel9"
+                    msg: "El rating máximo permitido es 5"
                 }
             }
-        },
-
+        }
+    }, {
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
+        tableName: 'Resenas',
+        charset: 'latin1',
+        collate: 'latin1_swedish_ci',
     });
 
-    resenas.associate = (models) => {
-        resenas.belongsTo(models.Reservas, {
-          foreignKey: {
-            allowNull: false,
-          },
+    Resenas.associate = (models) => {
+        Resenas.belongsTo(models.Reservas, {
+            foreignKey: {
+                allowNull: false,
+            },
+            onDelete: 'CASCADE', 
+            onUpdate: 'CASCADE' 
         });
-      };
+        Resenas.belongsTo(models.User, {
+            foreignKey: {
+                allowNull: false,
+            },
+        });
+    };
 
-    return resenas;
-}
+    return Resenas;
+};

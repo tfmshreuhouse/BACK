@@ -6,6 +6,7 @@ const denunciasCtrl = require('../Controllers/DenunciaCtrl');
 const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl');
 const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl');
 const inmueblesCtrl = require('../Controllers/InmueblesCtrl');
+const resenasCtrl = require('../Controllers/ResenasCtrl');
 const publicacion = require('../Controllers/PublicacionCtrl');
 const DetallesInmuebles = require('../Controllers/DetailCtrl');
 const ImagnenesInmuebles = require('../Controllers/ImageCtrl');
@@ -62,4 +63,6 @@ router.post("/denuncias", requireAuth, denunciasCtrl.create)
 router.patch("/denuncias", requireAuth, denunciasCtrl.update)
 router.delete("/denuncias/:id", requireAuth, denunciasCtrl.delete)
 
+router.post("/resenas", requireAuth, resenasCtrl.createResena)
+router.get('/resenas/:reservaId',requireAuth, resenasCtrl.getByReservaId);
 module.exports = router;
