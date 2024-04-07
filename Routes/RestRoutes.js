@@ -24,6 +24,7 @@ router.get("/reservas/User/:id", requireAuth, reservasCtrl.getReservaUser)
 router.get("/reservas/mis-reservas", requireAuth, reservasCtrl.getMisReservas)
 router.get("/reservas/reservas-en-mis-inmuebles", requireAuth, reservasCtrl.getReservasEnMisInmuebles)
 router.post("/reservas", requireAuth, reservasCtrl.create)
+router.put("/reservas/status", requireAuth, reservasCtrl.changeStatusReserva)
 router.patch("/reservas", requireAuth, reservasCtrl.update)
 router.delete("/reservas/:id", requireAuth, reservasCtrl.delete)
 

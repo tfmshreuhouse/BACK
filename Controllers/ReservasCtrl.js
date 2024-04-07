@@ -365,3 +365,42 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
     });
 
 };
+
+exports.changeStatusReserva = async (req, res, next) => {
+
+    let id = req.query.id;
+    let status = req.query.status;
+
+    console.log(id + " - " + status)
+
+    try {
+
+        let reservaDB = await Reservas.findOne({
+            where: { id: id },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+
+        if(reservaDB == null  || reservaDB == undefined){
+            throw Error("no existe la reserva que quiere actualizar")
+        }
+
+        if(status != null  && status != undefined){
+            reservaDB.status = status
+        }
+
+        reservaDB.set(reservaDB);
+
+        let reservaUpdate = await reservaDB.save();
+
+        res.status(201).json({
+            success: true,
+            data: reservaUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: { message: err.message }
+        });
+    }
+
+};
