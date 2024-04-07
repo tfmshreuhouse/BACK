@@ -56,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
         reservas.belongsTo(models.User, {
             foreignKey: {
                 allowNull: false,
+                foreignKey: 'UserId'
             },
         });
       };

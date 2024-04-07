@@ -1,5 +1,6 @@
-const { Reservas, Publicaciones, User } = require('../models');
+const { Reservas, Publicaciones, User, Inmuebles, sequelize, TiposInmuebles, ImagnenesInmuebles } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
+const { Op } = require('sequelize');
 require('dotenv').config();
 
 exports.getAll = async (req, res, next) => {
@@ -190,5 +191,177 @@ exports.delete = async (req, res, next) => {
             error: { message: err.message }
         });
     }
+
+};
+exports.getReservaUser = async (req, res, next) => {
+    const userId = req.params.id;
+    const estado = req.query.estado; 
+
+    try {
+        let whereClause = { UserId: userId };
+        
+        if (estado) {
+            whereClause.estado = estado;
+        }
+
+        const userReservas = await Reservas.findAll({
+            where: whereClause,
+            attributes: [
+                'id',
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaInicio'), '%Y-%m-%d'), 'fechaInicio'],
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaFin'), '%d-%m-%Y'), 'fechaFin']
+            ],
+            include: [
+                {
+                    model: Publicaciones,
+                    include: [
+                        {
+                            model: Inmuebles,
+                            attributes: ['id', 'Nombre','Pais', 'Ciudad', 'Direccion'],
+                            // include: [
+                            //     {
+                            //         model: TiposInmuebles
+                            //     }
+                            // ]
+                        }
+                    ],
+                    attributes: ['id', 'fechaActiva', 'fechaInActiva', 'costo']
+                }
+            ]
+        });
+
+        const reservasConIds = userReservas.map(reserva => ({
+            reservaId: reserva.id,
+            inmuebleId: reserva.Publicacione.Inmueble.id,
+            fechaInicio: reserva.fechaInicio,
+            fechaFin: reserva.fechaFin,
+            fechaActiva: reserva.Publicacione.fechaActiva,
+            fechaInActiva: reserva.Publicacione.fechaInActiva,
+            costo: reserva.Publicacione.costo,
+            direccion: reserva.Publicacione.Inmueble.Direccion,
+            pais: reserva.Publicacione.Inmueble.Pais,
+            ciudad: reserva.Publicacione.Inmueble.Ciudad,
+            nombreInmueble: reserva.Publicacione.Inmueble.Nombre
+        }));
+
+        res.status(200).json({
+            success: true,
+            data: reservasConIds
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+};
+
+exports.getMisReservas = (req, res, next) => {
+
+    const userId = req.query.userId; 
+
+    Publicaciones.hasMany(Reservas, { foreignKey: 'PublicacioneId' });
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+
+    Publicaciones.findAll({
+    include: [
+        {
+            model: Reservas,
+            required: true, 
+            duplicating: false,
+            where: { UserId: userId }
+        },
+        {
+            model: Inmuebles,
+            attributes:['Nombre', 'Pais', 'Ciudad', 'Direccion', 'UserId'],
+            include: [
+                {
+                  model: ImagnenesInmuebles,
+                  attributes:['URL', 'status'],
+                  //where: { status: 1 }
+                },
+                {
+                    model: User,
+                    attributes:['id', 'nombres', 'apellidos', 'correo'],
+                    //where: { status: 1 }
+                },
+            ],
+        },
+    ],
+    where: { status: 1 },
+    attributes: {
+        include: [
+          [sequelize.fn('COUNT', sequelize.col('Reservas.id')), 'cantidadReservas']
+        ]
+      },
+    group: ['Publicaciones.id']
+    }).then((publicaciones) => {
+        console.log(publicaciones);
+        res.status(200).json({
+            success: true,
+            data: publicaciones
+        });
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    });
+
+};
+
+exports.getReservasEnMisInmuebles = (req, res, next) => {
+
+    const userId = req.query.userId; 
+
+    Publicaciones.hasMany(Reservas, { foreignKey: 'PublicacioneId' });
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+
+    Publicaciones.findAll({
+    include: [
+        {
+            model: Reservas,
+            required: true, 
+            duplicating: false,
+            include: [{
+                model: User,
+                attributes:['id','nombres', 'apellidos', 'correo'],
+                //where: { status: 1 }
+            }]
+        },
+        {
+            model: Inmuebles,
+            attributes:['Nombre', 'Pais', 'Ciudad', 'Direccion', 'UserId'],
+            include: [
+                {
+                  model: ImagnenesInmuebles,
+                  attributes:['URL', 'status']
+                },
+            ],
+            where: { UserId: userId }
+        },
+    ],
+    where: { status: 1 },
+    attributes: {
+        include: [
+          [sequelize.fn('COUNT', sequelize.col('Reservas.id')), 'cantidadReservas']
+        ]
+      },
+    group: ['Publicaciones.id']
+    }).then((publicaciones) => {
+        console.log(publicaciones);
+        res.status(200).json({
+            success: true,
+            data: publicaciones
+        });
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    });
 
 };

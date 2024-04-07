@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const tiposInmueblesController = require('../Controllers/TiposInmueblesCtrl');
 const reservasCtrl = require('../Controllers/ReservasCtrl');
+const denunciasCtrl = require('../Controllers/DenunciaCtrl');
 const direcGeneralCtrl = require('../Controllers/DireccionesGeneralesCtrl');
 const direcParticularCtrl = require('../Controllers/DireccionesParticularesCtrl');
 const inmueblesCtrl = require('../Controllers/InmueblesCtrl');
@@ -19,6 +20,9 @@ router.delete("/tipos-inmuebles/:id", requireAuth, tiposInmueblesController.dele
 
 router.get("/reservas", requireAuth, reservasCtrl.getAll)
 router.get("/reservas/filter", requireAuth, reservasCtrl.getFilter)
+router.get("/reservas/User/:id", requireAuth, reservasCtrl.getReservaUser)
+router.get("/reservas/mis-reservas", requireAuth, reservasCtrl.getMisReservas)
+router.get("/reservas/reservas-en-mis-inmuebles", requireAuth, reservasCtrl.getReservasEnMisInmuebles)
 router.post("/reservas", requireAuth, reservasCtrl.create)
 router.patch("/reservas", requireAuth, reservasCtrl.update)
 router.delete("/reservas/:id", requireAuth, reservasCtrl.delete)
@@ -36,11 +40,13 @@ router.post("/inmuebles", requireAuth, inmueblesCtrl.create)
 router.patch("/inmuebles", requireAuth, inmueblesCtrl.update)
 router.delete("/inmuebles/:id", requireAuth, inmueblesCtrl.delete)
 router.get("/inmuebles/:id", requireAuth, inmueblesCtrl.get)
+router.get("/inmuebles/user/:userId", requireAuth, inmueblesCtrl.getforUser)
 
 router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)
 router.patch("/publicacion", requireAuth, publicacion.update)
 router.get("/publicacion/:id", requireAuth, publicacion.get)
+router.put("/publicacion/status", requireAuth, publicacion.changeStatusPublicacion)
 
 router.post("/DetallesInmuebles", requireAuth, DetallesInmuebles.create)
 router.patch("/DetallesInmuebles", requireAuth, DetallesInmuebles.update)
@@ -50,5 +56,13 @@ router.post("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.create)
 router.patch("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.update)
 router.delete("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.delete)
 router.get("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.get)
+
+router.get("/denuncias", requireAuth, denunciasCtrl.getAll)
+router.get("/denuncias/publicaciones", requireAuth, denunciasCtrl.getPublicacionesWithDenuncias)
+router.get("/denuncias/usuarios/publicacion", requireAuth, denunciasCtrl.getUsersByPublicacionDenunciada)
+router.get("/denuncias/filter", requireAuth, denunciasCtrl.getFilter)
+router.post("/denuncias", requireAuth, denunciasCtrl.create)
+router.patch("/denuncias", requireAuth, denunciasCtrl.update)
+router.delete("/denuncias/:id", requireAuth, denunciasCtrl.delete)
 
 module.exports = router;

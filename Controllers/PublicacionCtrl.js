@@ -118,6 +118,59 @@ exports.get = async (req, res, next) => {
         res.status(500).json({
             success: false,
             error: "errorServer1 " + err
+        if(status != null  && status != undefined){
+            publicacionDB.status = status
+        }
+
+        publicacionDB.set(publicacionDB);
+
+        let publicacionUpdate = await publicacionDB.save();
+
+        res.status(201).json({
+            success: true,
+            data: publicacionUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: { message: err.message }
+        });
+    }
+    
+    exports.changeStatusPublicacion = async (req, res, next) => {
+
+    let id = req.query.id;
+    let status = req.query.status;
+
+    console.log(id + " - " + status)
+
+    try {
+
+        let publicacionDB = await Publicaciones.findOne({
+            where: { id: id },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+
+        if(publicacionDB == null  || publicacionDB == undefined){
+            throw Error("no existe la publicacion que quiere actualizar")
+        }
+
+        if(status != null  && status != undefined){
+            publicacionDB.status = status
+        }
+
+        publicacionDB.set(publicacionDB);
+
+        let publicacionUpdate = await publicacionDB.save();
+
+        res.status(201).json({
+            success: true,
+            data: publicacionUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: { message: err.message }
         });
     }
 
