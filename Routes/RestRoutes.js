@@ -40,13 +40,14 @@ router.get("/inmuebles/:id", requireAuth, inmueblesCtrl.get)
 router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)
 router.patch("/publicacion", requireAuth, publicacion.update)
+router.get("/publicacion/:id", requireAuth, publicacion.get)
 
 router.post("/DetallesInmuebles", requireAuth, DetallesInmuebles.create)
 router.patch("/DetallesInmuebles", requireAuth, DetallesInmuebles.update)
 router.delete("/DetallesInmuebles/:id", requireAuth, DetallesInmuebles.delete)
 
 router.post("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.create)
-router.patch("/Inmueblesmuebles", requireAuth, ImagnenesInmuebles.update)
+router.patch("/ImagnenesInmuebles", requireAuth, ImagnenesInmuebles.update)
 router.delete("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.delete)
 router.get("/ImagnenesInmuebles/:id", requireAuth, ImagnenesInmuebles.get)
 

@@ -33,9 +33,6 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: {
                     msg: "errorPublicacionesModel6"
                 },
-                isInt: {
-                    msg: "errorPublicacionesModel7"
-                },
                 min: {
                     args: [1],
                     msg: "errorPublicacionesModel8"
@@ -84,9 +81,6 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: {
                     msg: "errorPublicacionesModel16"
                 },
-                isInt: {
-                    msg: "errorPublicacionesModel17"
-                },
                 min: {
                     args: [0],
                     msg: "errorPublicacionesModel18"
@@ -104,7 +98,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: {
                 allowNull: false,
             },
-        });
+        }); 
     };
 
     return publicaciones;

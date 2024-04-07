@@ -1,11 +1,11 @@
-const { Inmuebles, DireccionesGenerales, DireccionesParticulares, TiposInmuebles, DetallesInmuebles, User } = require('../models');
+const { Inmuebles, TiposInmuebles, DetallesInmuebles, User } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
 
 exports.getAll = async (req, res, next) => {
 
     try {
-        const all = await Inmuebles.findAll({
+        const all = await Inmuebles.findAll({ 
             order: [
                 ['updatedAt', 'ASC'],
             ],
@@ -29,10 +29,10 @@ exports.getAll = async (req, res, next) => {
 exports.create = async (req, res, next) => {
 
     let Inmueble = req.body
-    console.log(Inmueble.DireccionesGenerales);
 
     try {
         const newInmueble = await Inmuebles.create({
+            Nombre: Inmueble.Nombre,
             Pais: Inmueble.Pais,
             Ciudad: Inmueble.Ciudad,
             Direccion: Inmueble.Direccion,
@@ -63,6 +63,7 @@ exports.update = async (req, res, next) => {
         });
 
         InmuebleDB.set({
+            Nombre: Inmueble.Nombre,
             Pais: Inmueble.Pais,
             Ciudad: Inmueble.Ciudad,
             Direccion: Inmueble.Direccion,

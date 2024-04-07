@@ -28,25 +28,34 @@ exports.create = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
 
-    const imagereq = { 
-        id: req.body.id,
+    const imagereq = {         
         URL: req.body.URL, 
-        status: req.body.status
+        status: req.body.status,
+        InmuebleId: req.body.InmuebleId
     };
 
     try {
-        const updatedImage = await ImagnenesInmuebles.findOneAndUpdate(
-            { id: imagereq.id },
-            { $set: { status: imagereq.status } },
-            { new: true }
-        );
+        let imagen = await ImagnenesInmuebles.findOne({
+            where: 
+            { 
+                URL: imagereq.URL, 
+                InmuebleId: imagereq.InmuebleId
+            }
+        });
 
-        if (!updatedImage) {
-            return res.status(404).json({
-                success: false,
-                error: 'Image not found'
-            });
-        }
+        imagen.set({
+            id: imagen.id,
+            URL: imagen.URL,
+            status: imagereq.status,
+            InmuebleId: imagen.InmuebleId
+        });
+
+        let imagenInmueble = await imagen.save();
+
+        res.status(201).json({
+            success: true,
+            data: imagenInmueble
+        });
 
     }catch(err){
         res.status(400).json({
@@ -89,7 +98,8 @@ exports.get = async (req, res, next) => {
                 ['updatedAt', 'ASC'],
             ],
             where: {
-                InmuebleId: id
+                InmuebleId: id,
+                status: 1
               }            
         });
         res.status(200).json({
