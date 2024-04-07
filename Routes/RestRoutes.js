@@ -38,6 +38,7 @@ router.post("/inmuebles", requireAuth, inmueblesCtrl.create)
 router.patch("/inmuebles", requireAuth, inmueblesCtrl.update)
 router.delete("/inmuebles/:id", requireAuth, inmueblesCtrl.delete)
 router.get("/inmuebles/:id", requireAuth, inmueblesCtrl.get)
+router.get("/inmuebles/user/:userId", requireAuth, inmueblesCtrl.getforUser)
 
 router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)

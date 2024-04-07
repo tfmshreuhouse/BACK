@@ -1,4 +1,4 @@
-const { Reservas, Publicaciones, User, Inmuebles, sequelize  } = require('../models');
+const { Reservas, Publicaciones, User, Inmuebles, sequelize, TiposInmuebles } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 const { Op } = require('sequelize');
 require('dotenv').config();
@@ -195,14 +195,20 @@ exports.delete = async (req, res, next) => {
 };
 exports.getReservaUser = async (req, res, next) => {
     const userId = req.params.id;
+    const estado = req.query.estado; 
 
     try {
+        let whereClause = { UserId: userId };
+        
+        if (estado) {
+            whereClause.estado = estado;
+        }
+
         const userReservas = await Reservas.findAll({
-            where: {
-                UserId: userId
-            },
+            where: whereClause,
             attributes: [
-                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaInicio'), '%d-%m-%Y'), 'fechaInicio'],
+                'id',
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaInicio'), '%Y-%m-%d'), 'fechaInicio'],
                 [sequelize.fn('DATE_FORMAT', sequelize.col('fechaFin'), '%d-%m-%Y'), 'fechaFin']
             ],
             include: [
@@ -211,20 +217,39 @@ exports.getReservaUser = async (req, res, next) => {
                     include: [
                         {
                             model: Inmuebles,
-                            attributes: ['id', 'Pais', 'Ciudad', 'Direccion']
+                            attributes: ['id', 'Nombre','Pais', 'Ciudad', 'Direccion'],
+                            include: [
+                                {
+                                    model: TiposInmuebles
+                                }
+                            ]
                         }
                     ],
-                    attributes: ['fechaActiva', 'fechaInActiva', 'costo']
+                    attributes: ['id', 'fechaActiva', 'fechaInActiva', 'costo']
                 }
             ]
         });
 
+        const reservasConIds = userReservas.map(reserva => ({
+            reservaId: reserva.id,
+            inmuebleId: reserva.Publicacione.Inmueble.id,
+            fechaInicio: reserva.fechaInicio,
+            fechaFin: reserva.fechaFin,
+            fechaActiva: reserva.Publicacione.fechaActiva,
+            fechaInActiva: reserva.Publicacione.fechaInActiva,
+            costo: reserva.Publicacione.costo,
+            direccion: reserva.Publicacione.Inmueble.Direccion,
+            pais: reserva.Publicacione.Inmueble.Pais,
+            ciudad: reserva.Publicacione.Inmueble.Ciudad,
+            nombreInmueble: reserva.Publicacione.Inmueble.Nombre,
+            TipoInmueble: reserva.Publicacione.Inmueble.TiposInmuebles.tipo
+        }));
+
         res.status(200).json({
             success: true,
-            data: userReservas
+            data: reservasConIds
         });
     } catch (error) {
-        // Manejar errores
         console.error(error);
         res.status(500).json({
             success: false,

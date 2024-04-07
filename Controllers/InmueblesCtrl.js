@@ -136,3 +136,27 @@ exports.get = async (req, res, next) => {
     }
 
 };
+
+exports.getforUser = async (req, res, next) => {
+    let userId = req.params.userId;
+
+    try {
+        const userInmuebles = await Inmuebles.findAll({
+            where: {
+                UserId: userId
+            },
+            include: [{ model: TiposInmuebles },
+                      { model: DetallesInmuebles },
+                      { model: User}]
+        });
+        res.status(200).json({
+            success: true,
+            data: userInmuebles
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: "errorServer1 " + err
+        });
+    }
+};
