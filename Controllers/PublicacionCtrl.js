@@ -1,4 +1,4 @@
-const { publicaciones, Inmuebles } = require('../models');
+const { publicaciones, Inmuebles, Publicaciones } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
 
@@ -95,6 +95,45 @@ exports.update = async (req, res, next) => {
         res.status(400).json({
             success: false,
             error: errorModelUser(err)
+        });
+    }
+
+};
+
+exports.changeStatusPublicacion = async (req, res, next) => {
+
+    let id = req.query.id;
+    let status = req.query.status;
+
+    console.log(id + " - " + status)
+
+    try {
+
+        let publicacionDB = await Publicaciones.findOne({
+            where: { id: id },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+
+        if(publicacionDB == null  || publicacionDB == undefined){
+            throw Error("no existe la publicacion que quiere actualizar")
+        }
+
+        if(status != null  && status != undefined){
+            publicacionDB.status = status
+        }
+
+        publicacionDB.set(publicacionDB);
+
+        let publicacionUpdate = await publicacionDB.save();
+
+        res.status(201).json({
+            success: true,
+            data: publicacionUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: { message: err.message }
         });
     }
 

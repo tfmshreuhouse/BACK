@@ -1,6 +1,7 @@
-const { Denuncias, Publicaciones, User } = require('../models');
+const { Denuncias, Publicaciones, User, Inmuebles, ImagnenesInmuebles } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
+const sequelize = require('sequelize');
 
 exports.getAll = async (req, res, next) => {
 
@@ -26,16 +27,65 @@ exports.getAll = async (req, res, next) => {
 
 };
 
+exports.getPublicacionesWithDenuncias = (req, res, next) => {
+
+    Publicaciones.hasMany(Denuncias, { foreignKey: 'PublicacioneId' });
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+
+    Publicaciones.findAll({
+    include: [
+        {
+            model: Denuncias,
+            attributes:[],
+            required: true, // Asegura que solo se devuelvan las publicaciones que tengan denuncias asociadas
+            duplicating: false, // Asegura que no se dupliquen las publicaciones por cada denuncia
+        },
+        {
+            model: Inmuebles,
+            attributes:['Nombre', 'Pais', 'Ciudad', 'Direccion'],
+            include: [
+                {
+                  model: ImagnenesInmuebles,
+                  attributes:['URL', 'status'],
+                  //where: { status: 1 }
+                },
+            ],
+        },
+    ],
+    where: { status: 1 },
+    attributes: {
+        include: [
+          [sequelize.fn('COUNT', sequelize.col('Denuncias.id')), 'cantidadDenuncias'],
+          [sequelize.fn('COUNT', sequelize.fn('DISTINCT', sequelize.col('Denuncias.userId'))), 'cantidadUsuarios']
+        ]
+      },
+    group: ['Publicaciones.id']
+    }).then((publicaciones) => {
+        console.log(publicaciones);
+        res.status(200).json({
+            success: true,
+            data: publicaciones
+        });
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    });
+
+};
+
 exports.getFilter = async (req, res, next) => {
 
     let motivo = req.query.motivo;
     let userId = req.query.userId;
-    let publicacionId = req.query.publicacionId;
+    let publicacioneId = req.query.publicacioneId;
 
     let query = {};
     if (motivo != null && motivo != undefined) query.motivo = motivo;
     if (userId != null && userId != undefined) query.userId = userId;
-    if (publicacionId != null && publicacionId != undefined) query.publicacionId = publicacionId;
+    if (publicacioneId != null && publicacioneId != undefined) query.publicacioneId = publicacioneId;
 
     try {
         const all = await Denuncias.findAll({
@@ -43,9 +93,48 @@ exports.getFilter = async (req, res, next) => {
                 ['updatedAt', 'ASC'],
             ],
             where: query,
-            include: [{ model: Publicaciones },
-                      { model: User}]
+            include: [{
+                model: User,
+                attributes:['nombres', 'apellidos', 'correo', 'perfil', 'status'],
+            }]
         });
+        res.status(200).json({
+            success: true,
+            data: all
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    }
+
+};
+
+exports.getUsersByPublicacionDenunciada = async (req, res, next) => {
+
+    let publicacioneId = req.query.publicacioneId;
+
+    let query = {};
+    if (publicacioneId != null && publicacioneId != undefined) query.publicacioneId = publicacioneId;
+
+    try {
+        const all = await Denuncias.findAll({
+            where: {
+              PublicacioneId: publicacioneId // Coloca el ID de la publicación que deseas consultar
+            },
+            include: [{
+              model: User,
+              attributes: ['id', 'nombres', 'apellidos', 'correo', 'perfil', 'status'] // Selecciona los atributos de usuario que deseas obtener
+            }],
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('Denuncias.id')), 'totalDenuncias'], // Cuenta el número total de denuncias
+                [sequelize.col('UserId'), 'userId']
+            ],
+            group: ['userId'], // Agrupa por IDs de usuario para evitar la duplicación
+            order: [[sequelize.literal('totalDenuncias'), 'DESC']] 
+          });
         res.status(200).json({
             success: true,
             data: all
