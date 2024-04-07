@@ -218,11 +218,11 @@ exports.getReservaUser = async (req, res, next) => {
                         {
                             model: Inmuebles,
                             attributes: ['id', 'Nombre','Pais', 'Ciudad', 'Direccion'],
-                            include: [
-                                {
-                                    model: TiposInmuebles
-                                }
-                            ]
+                            // include: [
+                            //     {
+                            //         model: TiposInmuebles
+                            //     }
+                            // ]
                         }
                     ],
                     attributes: ['id', 'fechaActiva', 'fechaInActiva', 'costo']
@@ -241,8 +241,7 @@ exports.getReservaUser = async (req, res, next) => {
             direccion: reserva.Publicacione.Inmueble.Direccion,
             pais: reserva.Publicacione.Inmueble.Pais,
             ciudad: reserva.Publicacione.Inmueble.Ciudad,
-            nombreInmueble: reserva.Publicacione.Inmueble.Nombre,
-            TipoInmueble: reserva.Publicacione.Inmueble.TiposInmuebles.tipo
+            nombreInmueble: reserva.Publicacione.Inmueble.Nombre
         }));
 
         res.status(200).json({
