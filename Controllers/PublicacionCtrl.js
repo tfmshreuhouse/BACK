@@ -1,11 +1,11 @@
-const { publicaciones, Inmuebles, Publicaciones } = require('../models');
+const { Publicaciones, Inmuebles } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
 
 exports.getAll = async (req, res, next) => {
 
     try {
-        const all = await publicaciones.findAll({
+        const all = await Publicaciones.findAll({
             order: [
                 ['fechaActiva', 'ASC'],
             ]
@@ -17,7 +17,7 @@ exports.getAll = async (req, res, next) => {
     } catch (err) {
         res.status(500).json({
             success: false,
-            error: "errorServer1"
+            error: "errorServer1 " + err
         });
     }
 
@@ -28,7 +28,7 @@ exports.create = async (req, res, next) => {
     let publicacion = req.body;
 
     try {
-        const newPublicacion = await Publicacion.create({
+        const newPublicacion = await Publicaciones.create({
             fechaActiva: publicacion.fechaActiva,
             fechaInActiva: publicacion.fechaInactiva,
             PAX: publicacion.PAX,
@@ -36,7 +36,7 @@ exports.create = async (req, res, next) => {
             descripcion: publicacion.descripcion,
             indicaciones: publicacion.indicaciones,
             status: publicacion.status,
-            InmueblesId: publicacion.Inmuebles
+            InmuebleId: publicacion.Inmuebles
         });
 
         res.status(201).json({
@@ -46,7 +46,7 @@ exports.create = async (req, res, next) => {
     } catch (err) {
         res.status(400).json({
             success: false,
-            error: errorModelUser(err)
+            error: errorModelUser(err) + err
         });
     }
 
@@ -68,7 +68,7 @@ exports.update = async (req, res, next) => {
 
 
     try {
-        let publicacionDB = await publicaciones.findOne({
+        let publicacionDB = await Publicaciones.findOne({
             where: { id: publicacion.id },
             attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
@@ -82,7 +82,7 @@ exports.update = async (req, res, next) => {
             descripcion: publicacion.descripcion, 
             indicaciones: publicacion.indicaciones, 
             status: publicacion.status, 
-            Inmuebles: publicacion.Inmuebles
+            InmuebleId: publicacion.Inmuebles
         });
 
         let publicacionUpdate = await publicacionDB.save();
@@ -100,7 +100,44 @@ exports.update = async (req, res, next) => {
 
 };
 
-exports.changeStatusPublicacion = async (req, res, next) => {
+exports.get = async (req, res, next) => {
+
+    let id  = req.params.id;
+
+    try {
+        const all = await Publicaciones.findOne({
+            where: {
+                InmuebleId: id
+              }
+        });
+        res.status(200).json({
+            success: true,
+            data: all
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: "errorServer1 " + err
+        if(status != null  && status != undefined){
+            publicacionDB.status = status
+        }
+
+        publicacionDB.set(publicacionDB);
+
+        let publicacionUpdate = await publicacionDB.save();
+
+        res.status(201).json({
+            success: true,
+            data: publicacionUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: { message: err.message }
+        });
+    }
+    
+    exports.changeStatusPublicacion = async (req, res, next) => {
 
     let id = req.query.id;
     let status = req.query.status;
