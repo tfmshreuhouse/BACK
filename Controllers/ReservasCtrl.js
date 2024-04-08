@@ -270,7 +270,17 @@ exports.getMisReservas = (req, res, next) => {
             model: Reservas,
             required: true, 
             duplicating: false,
-            where: { UserId: userId }
+            where: { UserId: userId },
+            attributes: [
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaInicio'), '%d-%m-%Y'), 'fechaInicio'],
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaFin'), '%d-%m-%Y'), 'fechaFin'],
+                [sequelize.fn('DATE_FORMAT', sequelize.col('Reservas.createdAt'), '%d-%m-%Y'), 'createdAt'],
+                [sequelize.literal('DATEDIFF(fechaFin, fechaInicio)'), 'dias'],
+                'id', 'status', 'UserId'
+            ],
+            order: [
+                ['dias', 'fechaInicio'],
+            ],
         },
         {
             model: Inmuebles,
@@ -283,18 +293,13 @@ exports.getMisReservas = (req, res, next) => {
                 },
                 {
                     model: User,
-                    attributes:['id', 'nombres', 'apellidos', 'correo'],
+                    attributes:['id', 'nombres', 'apellidos', 'correo', 'telefono'],
                     //where: { status: 1 }
                 },
             ],
         },
     ],
     where: { status: 1 },
-    attributes: {
-        include: [
-          [sequelize.fn('COUNT', sequelize.col('Reservas.id')), 'cantidadReservas']
-        ]
-      },
     group: ['Publicaciones.id']
     }).then((publicaciones) => {
         console.log(publicaciones);
@@ -324,12 +329,29 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
         {
             model: Reservas,
             required: true, 
-            duplicating: false,
             include: [{
                 model: User,
-                attributes:['id','nombres', 'apellidos', 'correo'],
+                attributes:['id','nombres', 'apellidos', 'correo', 'telefono'],
                 //where: { status: 1 }
-            }]
+            }],
+            attributes: [
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaInicio'), '%d-%m-%Y'), 'fechaInicio'],
+                [sequelize.fn('DATE_FORMAT', sequelize.col('fechaFin'), '%d-%m-%Y'), 'fechaFin'],
+                [sequelize.fn('DATE_FORMAT', sequelize.col('Reservas.createdAt'), '%d-%m-%Y'), 'createdAt'],
+                [sequelize.literal('DATEDIFF(fechaFin, fechaInicio)'), 'dias'],
+                'id', 'status', 'UserId'
+            ],
+            /*where: {
+                fechaInicio: {
+                    [Op.gte]: new Date() // Solo considera reservas con fecha de inicio igual o posterior a la actual
+                }
+            },*/
+            order: [
+                ['dias', 'fechaInicio'],
+            ],
+            group: [
+                sequelize.literal('DATE_FORMAT(fechaInicio, "%d-%m-%Y")'), // Agrupa por fecha de inicio formateada
+            ],
         },
         {
             model: Inmuebles,
@@ -343,13 +365,7 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
             where: { UserId: userId }
         },
     ],
-    where: { status: 1 },
-    attributes: {
-        include: [
-          [sequelize.fn('COUNT', sequelize.col('Reservas.id')), 'cantidadReservas']
-        ]
-      },
-    group: ['Publicaciones.id']
+    where: { status: 1 }
     }).then((publicaciones) => {
         console.log(publicaciones);
         res.status(200).json({
