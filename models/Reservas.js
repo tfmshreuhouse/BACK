@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         fechaInicio: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
             validate: {
               customValidator(value) {
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         fechaFin: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false,
             validate: {
               customValidator(value) {
