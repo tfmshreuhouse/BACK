@@ -14,7 +14,7 @@ const { requireAuth } = require('../Middleware/authMiddleware');
 
 const fieldsPutUpdateUser = ['id', 'tipo'];
 
-router.get("/tipos-inmuebles", requireAuth, tiposInmueblesController.getAll)
+router.get("/tipos-inmuebles", tiposInmueblesController.getAll)
 router.post("/tipos-inmuebles", requireAuth, tiposInmueblesController.create)
 router.patch("/tipos-inmuebles", requireAuth, tiposInmueblesController.update)
 router.delete("/tipos-inmuebles/:id", requireAuth, tiposInmueblesController.delete)
@@ -48,6 +48,7 @@ router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)
 router.patch("/publicacion", requireAuth, publicacion.update)
 router.get("/publicacion/:id", requireAuth, publicacion.get)
+router.get("/publicacion/home/filter", requireAuth, publicacion.getPublicacionesHomeFilter)
 router.put("/publicacion/status", requireAuth, publicacion.changeStatusPublicacion)
 
 router.post("/DetallesInmuebles", requireAuth, DetallesInmuebles.create)

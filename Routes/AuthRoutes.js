@@ -5,6 +5,7 @@ const { middlewareValidateRequestFields, middlewareValidateRequestValues } = req
 
 const fieldsPostCreateUser = ['nombres', 'apellidos', 'correo', 'telefono', 'password', 'perfil', 'status'];
 const fieldsPutUpdateUser = ['id', 'nombres', 'apellidos', 'correo', 'telefono', 'perfil', 'status'];
+const fieldsPutUpdatePass = ['UserId', 'password'];
 const fieldsGetTokenInfo = ['token'];
 const fieldsGetUserInfo = ['token'];
 const fieldsGetLoginUser = ['correo', 'password'];
@@ -35,6 +36,7 @@ router.post("", middlewareValidateRequestFields("body", fieldsPostCreateUser, "e
 router.post("/login", middlewareValidateRequestFields("body", fieldsGetLoginUser, "errorAuthReqBody3"), middlewareValidateRequestValues("body", fieldsGetLoginUser, "errorAuthReqBody4"), authController.postLoginUser);
 
 //PUT Update Users
-router.put("", middlewareValidateRequestFields("body", fieldsPutUpdateUser, "errorAuthReqBody1"), authController.putUpdateUserInfo);
+router.put("/UpdateUser", middlewareValidateRequestFields("body", fieldsPutUpdateUser, "errorAuthReqBody1"), authController.putUpdateUserInfo);
+router.put("/UpdatePass", middlewareValidateRequestFields("body", fieldsPutUpdatePass, "errorAuthReqBody1"), authController.putUpdateUserPass);
 
 module.exports = router;

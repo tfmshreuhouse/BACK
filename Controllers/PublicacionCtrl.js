@@ -1,6 +1,8 @@
-const { Publicaciones, Inmuebles } = require('../models');
+const { Publicaciones, Inmuebles, ImagnenesInmuebles } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
+const sequelize = require('sequelize');
+const { Op } = require('sequelize');
 
 exports.getAll = async (req, res, next) => {
 
@@ -150,4 +152,101 @@ exports.changeStatusPublicacion = async (req, res, next) => {
             error: { message: err.message }
         });
     }
+};
+
+exports.getPublicacionesHomeFilter = (req, res, next) => {
+
+    let costoMinimo = req.body.costoMinimo;
+    let costoMaximo = req.body.costoMaximo;
+    let tipoInmueble = req.body.tipoInmueble;
+    let pais = req.body.pais;
+    let ciudad = req.body.ciudad;
+    let PAX = req.body.PAX;
+
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+    Inmuebles.hasMany(Publicaciones, { foreignKey: 'InmuebleId' });
+
+    const page = 1; // Página actual
+    const perPage = 12; // Resultados por página
+    const offset = (page - 1) * perPage; // Cálculo del desplazamiento
+    const where = { status: 1 };
+    
+    if (typeof PAX !== 'undefined'){
+        where['$PAX$'] = {
+            [Op.gte]: PAX
+        }; 
+    }
+    if (typeof costoMinimo !== 'undefined' && typeof costoMaximo !== 'undefined') {
+        where['$costo$'] = {
+            [Op.gte]: costoMinimo,
+            [Op.lte]: costoMaximo,
+        };
+    } else if (typeof costoMinimo === 'undefined' && typeof costoMaximo !== 'undefined') {
+        where['$costo$'] = {
+            [Op.lte]: costoMaximo,
+        };
+    } else if (typeof costoMinimo !== 'undefined' && typeof costoMaximo === 'undefined') {
+        console.log('ter')
+        where['$costo$'] = {
+            [Op.gte]: costoMinimo
+        };
+    }
+
+    let whereInmueble = {};
+    if (typeof tipoInmueble !== 'undefined') {
+        whereInmueble['$TiposInmuebleId$'] = tipoInmueble;
+    }
+
+    if (typeof pais !== 'undefined') {
+        pais = "%" + pais + "%";
+        whereInmueble.Pais = sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('Inmueble.Pais')),
+            {
+                [Op.like]: sequelize.fn('LOWER', pais)
+            }
+        )
+    }
+
+    if (typeof ciudad !== 'undefined') {
+        ciudad = "%" + ciudad + "%";
+        whereInmueble.Ciudad = sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('Inmueble.Ciudad')),
+            {
+                [Op.like]: sequelize.fn('LOWER', ciudad)
+            }
+        )
+    }
+
+    Publicaciones.findAll({
+        include: [
+            {
+                model: Inmuebles,
+                attributes: ['Ciudad', 'Pais'],
+                where: whereInmueble,
+                include: [
+                    {
+                        model: ImagnenesInmuebles,
+                        attributes: ['URL', 'status'],
+                        //where: { status: 1 }
+                    },
+                ],
+            },
+        ],
+        where: where,
+        limit: perPage,
+        offset: offset,
+    }).then((publicaciones) => {
+        console.log(publicaciones);
+        res.status(200).json({
+            success: true,
+            data: publicaciones
+        });
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    });
+
 };

@@ -281,3 +281,36 @@ exports.getUserById = async (req, res, next) => {
         });
     }
 };
+exports.putUpdateUserPass = async (req, res, next) => {
+
+    const userReq = {
+        id: req.body.UserId,
+        password: req.body.password
+    }
+
+    try {
+        const userDB = await User.findOne({
+            where: { id: userReq.id },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+        });
+
+        const userNew = helperCompararUser(userReq, userDB);
+
+        userDB.set({
+            id: userNew.id,
+            password: userNew.password
+        });
+
+        const userUpdate = await userDB.save();
+
+        res.status(201).json({
+            success: true,
+            data: userUpdate
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            error: errorModelUser(err)
+        });
+    }
+};
