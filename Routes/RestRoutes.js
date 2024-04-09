@@ -48,7 +48,7 @@ router.get("/publicacion", requireAuth, publicacion.getAll)
 router.post("/publicacion", requireAuth, publicacion.create)
 router.patch("/publicacion", requireAuth, publicacion.update)
 router.get("/publicacion/:id", requireAuth, publicacion.get)
-router.get("/publicacion/home/filter", requireAuth, publicacion.getPublicacionesHomeFilter)
+router.post("/publicacion/home/filter", publicacion.getPublicacionesHomeFilter)
 router.put("/publicacion/status", requireAuth, publicacion.changeStatusPublicacion)
 
 router.post("/DetallesInmuebles", requireAuth, DetallesInmuebles.create)

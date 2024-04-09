@@ -170,22 +170,22 @@ exports.getPublicacionesHomeFilter = (req, res, next) => {
     const perPage = 12; // Resultados por página
     const offset = (page - 1) * perPage; // Cálculo del desplazamiento
     const where = { status: 1 };
-    
-    if (typeof PAX !== 'undefined'){
+    if (PAX !== null){
+
         where['$PAX$'] = {
             [Op.gte]: PAX
         }; 
     }
-    if (typeof costoMinimo !== 'undefined' && typeof costoMaximo !== 'undefined') {
+    if (costoMinimo !== null && costoMaximo !== null) {
         where['$costo$'] = {
             [Op.gte]: costoMinimo,
             [Op.lte]: costoMaximo,
         };
-    } else if (typeof costoMinimo === 'undefined' && typeof costoMaximo !== 'undefined') {
+    } else if (costoMinimo === null && costoMaximo !== null) {
         where['$costo$'] = {
             [Op.lte]: costoMaximo,
         };
-    } else if (typeof costoMinimo !== 'undefined' && typeof costoMaximo === 'undefined') {
+    } else if (costoMinimo !== null && costoMaximo === null) {
         console.log('ter')
         where['$costo$'] = {
             [Op.gte]: costoMinimo
@@ -193,7 +193,7 @@ exports.getPublicacionesHomeFilter = (req, res, next) => {
     }
 
     let whereInmueble = {};
-    if (typeof tipoInmueble !== 'undefined') {
+    if (typeof tipoInmueble !== 'undefined' && typeof tipoInmueble !== null) {
         whereInmueble['$TiposInmuebleId$'] = tipoInmueble;
     }
 
@@ -221,7 +221,7 @@ exports.getPublicacionesHomeFilter = (req, res, next) => {
         include: [
             {
                 model: Inmuebles,
-                attributes: ['Ciudad', 'Pais'],
+                attributes: ['Nombre', 'Pais', 'Ciudad', 'Direccion', 'UserId'],
                 where: whereInmueble,
                 include: [
                     {
