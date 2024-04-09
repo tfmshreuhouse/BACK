@@ -39,6 +39,17 @@ module.exports = (sequelize, DataTypes) => {
                 }
             }
         },
+        moneda: {
+            type: DataTypes.STRING,
+            allowNull: {
+                msg: "errorPublicacionesModel13"
+            },
+            validate: {
+                notEmpty: {
+                    msg: "errorPublicacionesModel14"
+                }
+            }
+        },
         costo: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: {

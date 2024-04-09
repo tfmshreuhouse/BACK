@@ -197,6 +197,9 @@ exports.getReservaUser = async (req, res, next) => {
     const userId = req.params.id;
     const estado = req.query.estado; 
 
+    Publicaciones.hasMany(Reservas, { foreignKey: 'PublicacioneId' });
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+
     try {
         let whereClause = { UserId: userId };
         
@@ -218,11 +221,13 @@ exports.getReservaUser = async (req, res, next) => {
                         {
                             model: Inmuebles,
                             attributes: ['id', 'Nombre','Pais', 'Ciudad', 'Direccion'],
-                            // include: [
-                            //     {
-                            //         model: TiposInmuebles
-                            //     }
-                            // ]
+                            include: [
+                                {
+                                  model: ImagnenesInmuebles,
+                                  attributes:['URL', 'status'],
+                                  //where: { status: 1 }
+                                }
+                            ]
                         }
                     ],
                     attributes: ['id', 'fechaActiva', 'fechaInActiva', 'costo']
@@ -241,7 +246,8 @@ exports.getReservaUser = async (req, res, next) => {
             direccion: reserva.Publicacione.Inmueble.Direccion,
             pais: reserva.Publicacione.Inmueble.Pais,
             ciudad: reserva.Publicacione.Inmueble.Ciudad,
-            nombreInmueble: reserva.Publicacione.Inmueble.Nombre
+            nombreInmueble: reserva.Publicacione.Inmueble.Nombre,
+            Url: reserva.Publicacione.Inmueble.ImagnenesInmuebles[0].URL
         }));
 
         res.status(200).json({

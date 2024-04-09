@@ -1,8 +1,10 @@
-const { Inmuebles, TiposInmuebles, DetallesInmuebles, User } = require('../models');
+const { Inmuebles, TiposInmuebles, DetallesInmuebles, User, ImagnenesInmuebles, Publicaciones } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 require('dotenv').config();
 
 exports.getAll = async (req, res, next) => {
+
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
 
     try {
         const all = await Inmuebles.findAll({ 
@@ -11,7 +13,8 @@ exports.getAll = async (req, res, next) => {
             ],
             include: [{ model: TiposInmuebles },
                       { model: DetallesInmuebles },
-                      { model: User}]
+                      { model: User},
+                      { model: ImagnenesInmuebles}]
         });
         res.status(200).json({
             success: true,
@@ -115,6 +118,8 @@ exports.delete = async (req, res, next) => {
 exports.get = async (req, res, next) => {
 
     let id  = req.params.id;
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+    Inmuebles.hasMany(Publicaciones, { foreignKey: 'InmuebleId' });
 
     try {
         const all = await Inmuebles.findOne({
@@ -123,7 +128,10 @@ exports.get = async (req, res, next) => {
               },
             include: [{ model: TiposInmuebles },
                       { model: DetallesInmuebles },
-                      { model: User}]
+                      { model: User},
+                      { model: ImagnenesInmuebles,
+                        where: { status: 1 }},
+                      { model: Publicaciones}]
         });
         res.status(200).json({
             success: true,
@@ -141,14 +149,15 @@ exports.get = async (req, res, next) => {
 exports.getforUser = async (req, res, next) => {
     let userId = req.params.userId;
 
+    Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
+
     try {
         const userInmuebles = await Inmuebles.findAll({
             where: {
                 UserId: userId
             },
             include: [{ model: TiposInmuebles },
-                      { model: DetallesInmuebles },
-                      { model: User}]
+                      { model: ImagnenesInmuebles}]
         });
         res.status(200).json({
             success: true,

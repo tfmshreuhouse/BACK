@@ -32,6 +32,7 @@ exports.create = async (req, res, next) => {
             fechaActiva: publicacion.fechaActiva,
             fechaInActiva: publicacion.fechaInactiva,
             PAX: publicacion.PAX,
+            moneda: publicacion.moneda,
             costo: publicacion.costo,
             descripcion: publicacion.descripcion,
             indicaciones: publicacion.indicaciones,
@@ -54,36 +55,27 @@ exports.create = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
 
-    let publicacion = {
-        id: req.body.id,
-        fechaActiva: req.body.fechaActiva,
-        fechaInactiva: req.body.fechaInactiva, 
-        PAX: req.body.PAX, 
-        costo: req.body.costo, 
-        descripcion: req.body.descripcion, 
-        indicaciones: req.body.indicaciones, 
-        status: req.body.status, 
-        Inmuebles: req.body.Inmuebles
-    }
-
+    let publicacion = req.body;
 
     try {
         let publicacionDB = await Publicaciones.findOne({
-            where: { id: publicacion.id },
-            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            where: { id: publicacion.id }
         });
 
         publicacionDB.set({
             id: publicacion.id,
             fechaActiva: publicacion.fechaActiva,
             fechaInactiva: publicacion.fechaInactiva, 
-            PAX: publicacion.PAX, 
+            PAX: publicacion.PAX,
+            moneda: publicacion.moneda,
             costo: publicacion.costo, 
             descripcion: publicacion.descripcion, 
             indicaciones: publicacion.indicaciones, 
             status: publicacion.status, 
             InmuebleId: publicacion.Inmuebles
         });
+
+        console.log(publicacionDB);
 
         let publicacionUpdate = await publicacionDB.save();
 
@@ -94,7 +86,7 @@ exports.update = async (req, res, next) => {
     } catch (err) {
         res.status(400).json({
             success: false,
-            error: errorModelUser(err)
+            error: errorModelUser(err) + err
         });
     }
 
