@@ -230,7 +230,7 @@ exports.getReservaUser = async (req, res, next) => {
                             ]
                         }
                     ],
-                    attributes: ['id', 'fechaActiva', 'fechaInActiva', 'costo']
+                    attributes: ['id', 'fechaActiva', 'fechaInActiva', 'costo', 'moneda']
                 }
             ]
         });
@@ -243,6 +243,7 @@ exports.getReservaUser = async (req, res, next) => {
             fechaActiva: reserva.Publicacione.fechaActiva,
             fechaInActiva: reserva.Publicacione.fechaInActiva,
             costo: reserva.Publicacione.costo,
+            moneda: reserva.Publicacione.moneda,
             direccion: reserva.Publicacione.Inmueble.Direccion,
             pais: reserva.Publicacione.Inmueble.Pais,
             ciudad: reserva.Publicacione.Inmueble.Ciudad,

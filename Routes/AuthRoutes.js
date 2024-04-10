@@ -5,7 +5,7 @@ const { middlewareValidateRequestFields, middlewareValidateRequestValues } = req
 
 const fieldsPostCreateUser = ['nombres', 'apellidos', 'correo', 'telefono', 'password', 'perfil', 'status'];
 const fieldsPutUpdateUser = ['id', 'nombres', 'apellidos', 'correo', 'telefono', 'perfil', 'status'];
-const fieldsPutUpdatePass = ['UserId', 'password'];
+const fieldsPutUpdatePass = ['id', 'newPassword', 'oldPassword'];
 const fieldsGetTokenInfo = ['token'];
 const fieldsGetUserInfo = ['token'];
 const fieldsGetLoginUser = ['correo', 'password'];

@@ -64,10 +64,6 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 notEmpty: {
                     msg: "errorUserModel12"
-                },
-                len: {
-                    args: [8, 15],
-                    msg: "errorUserModel13"
                 }
             }
         },

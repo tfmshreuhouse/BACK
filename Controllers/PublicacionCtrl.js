@@ -162,6 +162,7 @@ exports.getPublicacionesHomeFilter = (req, res, next) => {
     let pais = req.body.pais;
     let ciudad = req.body.ciudad;
     let PAX = req.body.PAX;
+    let moneda = req.body.moneda
 
     Inmuebles.hasMany(ImagnenesInmuebles, { foreignKey: 'InmuebleId' });
     Inmuebles.hasMany(Publicaciones, { foreignKey: 'InmuebleId' });
@@ -190,6 +191,16 @@ exports.getPublicacionesHomeFilter = (req, res, next) => {
         where['$costo$'] = {
             [Op.gte]: costoMinimo
         };
+    }
+
+    if (typeof moneda !== 'undefined') {
+        moneda = "%" + moneda + "%";
+        where['$moneda$'] = sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('moneda')),
+            {
+                [Op.like]: sequelize.fn('LOWER', moneda)
+            }
+        )
     }
 
     let whereInmueble = {};

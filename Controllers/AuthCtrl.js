@@ -235,11 +235,12 @@ exports.putUpdateUserInfo = async (req, res, next) => {
 
         userDB.set({
             id: userNew.id,
-            nombres: userNew.nombres,
-            apellidos: userNew.apellidos,
+            nombres: userReq.nombres,
+            apellidos: userReq.apellidos,
             correo: userNew.correo,
             perfil: userNew.perfil,
-            status: userNew.status
+            status: userNew.status,
+            telefono: userReq.telefono
         });
 
         const userUpdate = await userDB.save();
@@ -284,8 +285,9 @@ exports.getUserById = async (req, res, next) => {
 exports.putUpdateUserPass = async (req, res, next) => {
 
     const userReq = {
-        id: req.body.UserId,
-        password: req.body.password
+        id: req.body.id,
+        newPassword: req.body.newPassword,
+        oldPassword: req.body.oldPassword
     }
 
     try {
@@ -294,12 +296,14 @@ exports.putUpdateUserPass = async (req, res, next) => {
             attributes: { exclude: ['createdAt', 'updatedAt'] },
         });
 
-        const userNew = helperCompararUser(userReq, userDB);
+        const sameOldPass = await bcrypt.compare(userReq.oldPassword, userDB.password);
 
-        userDB.set({
-            id: userNew.id,
-            password: userNew.password
-        });
+        if(!sameOldPass){
+            throw Error("La contraseña actual no coincide con la registrada.");
+        } 
+        
+        const salt = await bcrypt.genSalt();
+        userDB.password = await bcrypt.hash(userReq.newPassword, salt);
 
         const userUpdate = await userDB.save();
 
@@ -308,9 +312,10 @@ exports.putUpdateUserPass = async (req, res, next) => {
             data: userUpdate
         });
     } catch (err) {
+        console.log(err)
         res.status(400).json({
             success: false,
-            error: errorModelUser(err)
+            error: {message : err.message}
         });
     }
 };
