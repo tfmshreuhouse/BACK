@@ -1,4 +1,4 @@
-const { Reservas, Publicaciones, User, Inmuebles, sequelize, TiposInmuebles, ImagnenesInmuebles } = require('../models');
+const { Reservas, Publicaciones, User, Inmuebles, sequelize, TiposInmuebles, ImagnenesInmuebles, Resenas } = require('../models');
 const { errorModelUser } = require('../ErrorHandlers/AuthErrorHandler');
 const { Op } = require('sequelize');
 require('dotenv').config();
@@ -385,6 +385,62 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
             error: "errorServer1"
         });
     });
+
+};
+
+exports.getReservasEnMisInmuebles2 = async (req, res, next) => {
+
+    const { userId, inmuebleId } = req.query;
+    console.log(req.query);
+
+    const allReservas = [];
+    const allResenas = [];
+
+    try {
+        const allPublicaciones = await Publicaciones.findAll({
+            attributes: ['id'],
+            where: {
+                InmuebleId: inmuebleId
+            }
+        });
+        for (let i = 0; i < allPublicaciones.length; i++) {
+            //console.log(allPublicaciones[i].id);
+            const Reserva = await Reservas.findAll({
+                attributes: ['id'],
+                where: { PublicacioneId: allPublicaciones[i].id }
+            });
+            //console.log(Reserva);
+            allReservas.push(...Reserva);
+        }
+        //console.log(allReservas);
+        for (let i = 0; i < allReservas.length; i++) {
+            //console.log(allReservas[i].dataValues.id);
+            const Resena = await Resenas.findAll({
+                where: { ReservaId: allReservas[i].dataValues.id }
+            });
+            //console.log(Resena);
+            allResenas.push(...Resena);
+        }
+        for (let i = 0; i < allResenas.length; i++) {
+            //console.log(allResenas[i].id);
+            const UserName = await User.findAll({
+                where: { id: allResenas[i].UserId }
+            });
+            //console.log(UserName);
+            console.log(allResenas[i].UserId);
+            allResenas[i].UserId = UserName[0].dataValues.nombres + UserName[0].dataValues.apellidos;
+        }
+        res.status(200).json({
+            success: true,
+            data: allResenas
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            error: "errorServer1"
+        });
+    }
 
 };
 
