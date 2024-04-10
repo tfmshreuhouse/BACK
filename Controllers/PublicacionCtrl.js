@@ -170,7 +170,11 @@ exports.getPublicacionesHomeFilter = (req, res, next) => {
     const page = 1; // Página actual
     const perPage = 12; // Resultados por página
     const offset = (page - 1) * perPage; // Cálculo del desplazamiento
-    const where = { status: 1 };
+    const where = {
+        status: {
+            [Op.ne]: 0 // El status no sea igual a 0
+        }
+    }
     if (PAX !== null){
 
         where['$PAX$'] = {
