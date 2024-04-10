@@ -10,6 +10,7 @@ const resenasCtrl = require('../Controllers/ResenasCtrl');
 const publicacion = require('../Controllers/PublicacionCtrl');
 const DetallesInmuebles = require('../Controllers/DetailCtrl');
 const ImagnenesInmuebles = require('../Controllers/ImageCtrl');
+const Notificaciones = require('../Controllers/NotificacionCtrl');
 const { requireAuth } = require('../Middleware/authMiddleware');
 
 const fieldsPutUpdateUser = ['id', 'tipo'];
@@ -70,4 +71,9 @@ router.delete("/denuncias/:id", requireAuth, denunciasCtrl.delete)
 
 router.post("/resenas", requireAuth, resenasCtrl.createResena)
 router.get('/resenas/:reservaId',requireAuth, resenasCtrl.getByReservaId);
+
+router.post("/notificaciones",requireAuth , Notificaciones.createNotificacion)
+router.get('/notificaciones/:UserId',requireAuth , Notificaciones.getByUserId)
+router.get('/notificaciones/id/:id',requireAuth , Notificaciones.getNotificacionesById)
+router.patch("/notificaciones/:id",requireAuth, Notificaciones.updateEstado)
 module.exports = router;
