@@ -306,7 +306,6 @@ exports.getMisReservas = (req, res, next) => {
             ],
         },
     ],
-    where: { status: 1 },
     group: ['Publicaciones.id']
     }).then((publicaciones) => {
         console.log(publicaciones);
@@ -335,7 +334,7 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
     include: [
         {
             model: Reservas,
-            required: true, 
+            required: true,
             include: [{
                 model: User,
                 attributes:['id','nombres', 'apellidos', 'correo', 'telefono'],
@@ -348,11 +347,12 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
                 [sequelize.literal('DATEDIFF(fechaFin, fechaInicio)'), 'dias'],
                 'id', 'status', 'UserId'
             ],
-            /*where: {
+            where: {
                 fechaInicio: {
                     [Op.gte]: new Date() // Solo considera reservas con fecha de inicio igual o posterior a la actual
-                }
-            },*/
+                },
+                status : 1
+            },
             order: [
                 ['dias', 'fechaInicio'],
             ],
@@ -371,8 +371,7 @@ exports.getReservasEnMisInmuebles = (req, res, next) => {
             ],
             where: { UserId: userId }
         },
-    ],
-    where: { status: 1 }
+    ]
     }).then((publicaciones) => {
         console.log(publicaciones);
         res.status(200).json({

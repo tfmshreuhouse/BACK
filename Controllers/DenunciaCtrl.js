@@ -36,7 +36,7 @@ exports.getPublicacionesWithDenuncias = (req, res, next) => {
     include: [
         {
             model: Denuncias,
-            attributes:[],
+            attributes:['motivo'],
             required: true, // Asegura que solo se devuelvan las publicaciones que tengan denuncias asociadas
             duplicating: false, // Asegura que no se dupliquen las publicaciones por cada denuncia
         },
@@ -52,10 +52,10 @@ exports.getPublicacionesWithDenuncias = (req, res, next) => {
             ],
         },
     ],
-    where: { status: 1 },
+    where: { status: { [sequelize.Op.ne]: 0 }},
     attributes: {
         include: [
-          [sequelize.fn('COUNT', sequelize.col('Denuncias.id')), 'cantidadDenuncias'],
+          [sequelize.fn('COUNT', sequelize.fn('DISTINCT', sequelize.col('Denuncias.id'))), 'cantidadDenuncias'],
           [sequelize.fn('COUNT', sequelize.fn('DISTINCT', sequelize.col('Denuncias.userId'))), 'cantidadUsuarios']
         ]
       },
