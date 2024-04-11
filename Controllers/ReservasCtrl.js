@@ -428,7 +428,7 @@ exports.getReservasEnMisInmuebles2 = async (req, res, next) => {
             });
             //console.log(UserName);
             console.log(allResenas[i].UserId);
-            allResenas[i].UserId = UserName[0].dataValues.nombres + UserName[0].dataValues.apellidos;
+            allResenas[i].UserId = UserName[0].dataValues.nombres + " " + UserName[0].dataValues.apellidos;
         }
         res.status(200).json({
             success: true,
